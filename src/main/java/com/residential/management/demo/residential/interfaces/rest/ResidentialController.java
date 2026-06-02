@@ -1,0 +1,79 @@
+package com.residential.management.demo.residential.interfaces.rest;
+
+import com.residential.management.demo.residential.domain.services.ResidentialCommandService;
+import com.residential.management.demo.residential.domain.services.ResidentialQueryService;
+import com.residential.management.demo.residential.interfaces.rest.resources.*;
+import com.residential.management.demo.residential.interfaces.rest.transform.BuildingResourceFromEntityAssembler;
+import com.residential.management.demo.residential.interfaces.rest.transform.UnitResourceFromEntityAssembler;
+import com.residential.management.demo.residential.interfaces.rest.transform.UserUnitResourceFromEntityAssembler;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/residential")
+public class ResidentialController {
+
+    private final ResidentialCommandService residentialCommandService;
+    private final ResidentialQueryService residentialQueryService;
+
+    public ResidentialController(
+            ResidentialCommandService residentialCommandService,
+            ResidentialQueryService residentialQueryService
+    ) {
+        this.residentialCommandService = residentialCommandService;
+        this.residentialQueryService = residentialQueryService;
+    }
+
+    @PostMapping("/buildings")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BuildingResource createBuilding(@RequestBody CreateBuildingResource resource) {
+        var building = residentialCommandService.createBuilding(resource);
+        return BuildingResourceFromEntityAssembler.toResourceFromEntity(building);
+    }
+
+    @PostMapping("/units")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UnitResource createUnit(@RequestBody CreateUnitResource resource) {
+        var unit = residentialCommandService.createUnit(resource);
+        return UnitResourceFromEntityAssembler.toResourceFromEntity(unit);
+    }
+
+    @PostMapping("/user-units")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserUnitResource assignUserToUnit(@RequestBody AssignUserToUnitResource resource) {
+        var userUnit = residentialCommandService.assignUserToUnit(resource);
+        return UserUnitResourceFromEntityAssembler.toResourceFromEntity(userUnit);
+    }
+
+    @PutMapping("/user-units/move")
+    public UserUnitResource moveUserToUnit(@RequestBody MoveUserToUnitResource resource) {
+        var userUnit = residentialCommandService.moveUserToUnit(resource);
+        return UserUnitResourceFromEntityAssembler.toResourceFromEntity(userUnit);
+    }
+
+    @GetMapping("/buildings")
+    public List<BuildingResource> getAllBuildings() {
+        return residentialQueryService.getAllBuildings()
+                .stream()
+                .map(BuildingResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+    }
+
+    @GetMapping("/buildings/{idBuilding}/units")
+    public List<UnitResource> getUnitsByBuildingId(@PathVariable Long idBuilding) {
+        return residentialQueryService.getUnitsByBuildingId(idBuilding)
+                .stream()
+                .map(UnitResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+    }
+
+    @GetMapping("/buildings/{idBuilding}/residents")
+    public List<UserUnitResource> getResidentsByBuildingId(@PathVariable Long idBuilding) {
+        return residentialQueryService.getResidentsByBuildingId(idBuilding)
+                .stream()
+                .map(UserUnitResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+    }
+}
