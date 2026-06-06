@@ -11,6 +11,10 @@ public class UnitResourceFromEntityAssembler {
                 entity.getBuilding().getIdBuilding(),
                 entity.getUnitNumber(),
                 entity.getFloor(),
+                entity.getCoveredArea(),
+                entity.getTotalArea(),
+                entity.getParticipationPercentage(),
+                entity.getDistributionPercentage(),
                 entity.getStatus()
         );
     }
