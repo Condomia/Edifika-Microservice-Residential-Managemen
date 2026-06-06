@@ -5,6 +5,10 @@ public record UnitResource(
         Long idBuilding,
         Integer unitNumber,
         Integer floor,
+        Double coveredArea,
+        Double totalArea,
+        Double participationPercentage,
+        Double distributionPercentage,
         String status
 ) {
 }

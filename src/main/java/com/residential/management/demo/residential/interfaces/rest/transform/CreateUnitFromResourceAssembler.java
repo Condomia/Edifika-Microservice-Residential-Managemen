@@ -11,6 +11,10 @@ public class CreateUnitFromResourceAssembler {
                 building,
                 resource.unitNumber(),
                 resource.floor(),
+                resource.coveredArea(),
+                resource.totalArea(),
+                resource.participationPercentage(),
+                resource.distributionPercentage(),
                 resource.status()
         );
     }
