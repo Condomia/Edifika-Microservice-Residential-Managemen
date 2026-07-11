@@ -3,10 +3,7 @@ package com.residential.management.demo.residential.domain.services;
 import com.residential.management.demo.residential.domain.model.aggregates.Building;
 import com.residential.management.demo.residential.domain.model.entities.Unit;
 import com.residential.management.demo.residential.domain.model.entities.UserUnit;
-import com.residential.management.demo.residential.interfaces.rest.resources.AssignUserToUnitResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.CreateBuildingResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.CreateUnitResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.MoveUserToUnitResource;
+import com.residential.management.demo.residential.interfaces.rest.resources.*;
 
 public interface ResidentialCommandService {
 
@@ -17,4 +14,6 @@ public interface ResidentialCommandService {
     UserUnit assignUserToUnit(AssignUserToUnitResource resource);
 
     UserUnit moveUserToUnit(MoveUserToUnitResource resource);
+
+    Unit updateUnit(Long idUnit, UpdateUnitResource resource);
 }

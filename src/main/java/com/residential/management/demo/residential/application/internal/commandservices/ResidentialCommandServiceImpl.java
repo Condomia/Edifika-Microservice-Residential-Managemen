@@ -7,13 +7,11 @@ import com.residential.management.demo.residential.domain.services.ResidentialCo
 import com.residential.management.demo.residential.infrastructure.persistence.jpa.repositories.BuildingRepository;
 import com.residential.management.demo.residential.infrastructure.persistence.jpa.repositories.UnitRepository;
 import com.residential.management.demo.residential.infrastructure.persistence.jpa.repositories.UserUnitRepository;
-import com.residential.management.demo.residential.interfaces.rest.resources.AssignUserToUnitResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.CreateBuildingResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.CreateUnitResource;
-import com.residential.management.demo.residential.interfaces.rest.resources.MoveUserToUnitResource;
+import com.residential.management.demo.residential.interfaces.rest.resources.*;
 import com.residential.management.demo.residential.interfaces.rest.transform.AssignUserToUnitFromResourceAssembler;
 import com.residential.management.demo.residential.interfaces.rest.transform.CreateBuildingFromResourceAssembler;
 import com.residential.management.demo.residential.interfaces.rest.transform.CreateUnitFromResourceAssembler;
+import com.residential.management.demo.residential.interfaces.rest.transform.UpdateUnitFromResourceAssembler;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +20,8 @@ public class ResidentialCommandServiceImpl implements ResidentialCommandService 
     private final BuildingRepository buildingRepository;
     private final UnitRepository unitRepository;
     private final UserUnitRepository userUnitRepository;
+
+
 
     public ResidentialCommandServiceImpl(
             BuildingRepository buildingRepository,
@@ -87,5 +87,18 @@ public class ResidentialCommandServiceImpl implements ResidentialCommandService 
         );
 
         return userUnitRepository.save(newAssignment);
+    }
+    @Override
+    public Unit updateUnit(Long idUnit, UpdateUnitResource resource) {
+
+        var unit = unitRepository.findById(idUnit)
+                .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+        var building = buildingRepository.findById(resource.idBuilding())
+                .orElseThrow(() -> new RuntimeException("Building not found"));
+
+        UpdateUnitFromResourceAssembler.toEntityFromResource(unit, resource, building);
+
+        return unitRepository.save(unit);
     }
 }

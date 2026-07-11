@@ -76,4 +76,12 @@ public class ResidentialController {
                 .map(UserUnitResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
     }
+    @PutMapping("/units/{idUnit}")
+    public UnitResource updateUnit(
+            @PathVariable Long idUnit,
+            @RequestBody UpdateUnitResource resource
+    ) {
+        var unit = residentialCommandService.updateUnit(idUnit, resource);
+        return UnitResourceFromEntityAssembler.toResourceFromEntity(unit);
+    }
 }
